@@ -1,8 +1,21 @@
 <script setup>
 import { ref } from 'vue'
 
-const input = ref('')
+const inputA = ref('')
+const inputB = ref('')
 const inputArr = ref([])
+const initial = ref(true)
+
+const sumNum = ()=>{
+    if (initial.value){
+        initial.value = false
+        inputB.value = String(Number(inputA.value) + Number(inputB.value))
+    } else{
+        initial.value = true
+        inputA.value = (Number(inputA.value) + Number(inputB.value))
+    }
+    
+}
 
 
 const calculationProcess = () =>{
@@ -39,18 +52,32 @@ const calculationProcess = () =>{
 }
 
 function addSymbol(char){
-    // console.log(char)
-    const keys = ['+','-','x','/']
-    if (inputArr.value.length % 2 == 0 && keys.includes(char)){
-        input.value = "Input Invalid"
-    } else if (inputArr.value.length % 2 != 0 && !isNaN(Number(char))){
-        input.value = "Input Invalid"
+    console.log(char)
+    // const keys = ['+','-','x','/']
+    // if (inputArr.value.length % 2 == 0 && keys.includes(char)){
+    //     input.value = "Input Invalid"
+    // } else if (inputArr.value.length % 2 != 0 && !isNaN(Number(char))){
+    //     input.value = "Input Invalid"
+    // } else if (char == '.'){
+    //     if (isNaN(Number(inputArr.value[inputArr.value.length-1]))){
+    //         input.value = "Input Invalid"
+    //     } else{
+    //         input.value += char
+    //         inputArr.value[inputArr.value.length-1] += char
+    //     }
+    // }
+    //  else{
+    //     input.value += char
+    //     inputArr.value.push(char)
+    // }
+
+    if (initial.value){
+        inputA.value += char
     } else{
-        input.value += char
-        inputArr.value.push(char)
+        inputB.value += char
     }
     
-    // console.log(inputArr.value)
+    console.log(inputArr.value)
     
 }
 
@@ -62,19 +89,20 @@ function clearValue(){
 
 <template>
     <div class="container">
-        <div class="mainView">{{ input ? input: 0 }}</div>
+        <div v-if="initial" class="mainView">{{ inputA ? inputA: 0 }}</div>
+        <div v-else class="mainView">{{ inputB ? inputB: 0 }}</div>
         <div class="buttonTop">
             <div>
-                <button @click="addSymbol('+')">+</button>
+                <button class="top-row" @click="sumNum()">+</button>
             </div>
             <div>
-                <button @click="addSymbol('-')">-</button>
+                <button class="top-row" @click="addSymbol('-')">-</button>
             </div>
             <div>
-                <button @click="addSymbol('x')">x</button>
+                <button class="top-row" @click="addSymbol('x')">x</button>
             </div>
             <div>
-                <button @click="addSymbol('/')">/</button>
+                <button class="top-row" @click="addSymbol('/')">/</button>
             </div>
         </div>
         <div class="buttonBottom">
@@ -106,24 +134,33 @@ function clearValue(){
                 <button @click="addSymbol('9')">9</button>
             </div>
             <div>
-                <button @click="addSymbol('0')">0</button>
+                <button class="left-bottom-corner" @click="addSymbol('0')">0</button>
             </div>
             <div>
                 <button @click="addSymbol('.')">.</button>
             </div>
             <div>
-                <button @click="clearValue()">AC</button>
+                <button  @click="clearValue()">AC</button>
             </div>
         </div>
         <div class="equalArea">
-            <button @click="calculationProcess()">=</button>
+            <button class="equal-button" @click="calculationProcess()">=</button>
         </div>
     </div>
 </template>
 
 <style scoped>
+*{
+    font-family: sans-serif;
+}
 .mainView{
     grid-area: views;
+    background-color: black;
+    color:white;
+    padding: 20px 20px 20px 0;
+    font-size: 50px;
+    text-align:right;
+    border-radius: 30px 30px 0 0;
 }
 
 .buttonTop{
@@ -137,10 +174,12 @@ function clearValue(){
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
+    border-radius: 0 0 30px 0;
 }
 
 .equalArea{
     grid-area:equals;
+    
 }
 
 
@@ -156,17 +195,40 @@ function clearValue(){
         "bottoms bottoms bottoms equals"
         "bottoms bottoms bottoms equals"
         "bottoms bottoms bottoms equals";
-    gap: 10px;
-    background-color: #2196F3;
+    
+    background-color: aqua;
     padding: 10px;
+    border-radius: 20px;
+}
+button {
+    border: 0.2px solid #5a5a5a;
+    background-color:azure;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    width:100%;
+    height:100%;
+    display:block;
 }
 
-.container > div {
+.equal-button{
+    background-color:firebrick;
+    border-radius:0 0 30px 0;
+}
+
+.left-bottom-corner{
+    border-radius:0 0 0 30px;
+}
+
+.top-row{
+    background-color:rgba(171, 171, 171, 0.806);
+}
+
+/* .container > div {
   background-color: rgba(255, 255, 255, 0.8);
   text-align: center;
-  padding: 20px 0;
-  font-size: 30px;
-}
+  
+} */
 
 
 </style>
