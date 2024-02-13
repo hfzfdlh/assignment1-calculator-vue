@@ -1,26 +1,31 @@
 <script setup>
 import { ref } from 'vue'
 
-const inputA = ref('')
-const inputB = ref('')
+const input = ref('')
 const inputArr = ref([])
 const initial = ref(true)
 
-const sumNum = ()=>{
-    if (initial.value){
-        initial.value = false
-        inputB.value = String(Number(inputA.value) + Number(inputB.value))
-    } else{
-        initial.value = true
-        inputA.value = (Number(inputA.value) + Number(inputB.value))
-    }
+// const sumNum = ()=>{
+//     if (initial.value){
+//         initial.value = false
+//         inputB.value = String(Number(inputA.value) + Number(inputB.value))
+//     } else{
+//         initial.value = true
+//         inputA.value = (Number(inputA.value) + Number(inputB.value))
+//     }
     
+// }
+
+const addProcess = (char)=>{
+    inputArr.value.push(input.value)
+    inputArr.value.push(char)
+    input.value = ''
 }
 
 
 const calculationProcess = () =>{
-    let curr = 0;
-    let temp = '';
+    inputArr.value.push(input.value)
+    console.log(inputArr.value)
 
     let processObj = {
         '+':(a,b)=>{
@@ -37,22 +42,15 @@ const calculationProcess = () =>{
         }
 
     }
-    for (let i  = 0; i < inputArr.value.length-1; i = i+2){
-        let a = inputArr.value[i]
-        let b = inputArr.value[i+2]
-        let proc = inputArr.value[i+1]
-        curr = processObj[proc](a,b)
-        console.log(a,b,proc,i, curr)
-        inputArr.value[i+2] = curr
-
-    }
-    console.log(curr)
-    inputArr.value =[curr]
-    input.value = String(curr)
+    let a = inputArr.value[0];
+    let b = inputArr.value[2];
+    input.value = String(processObj[inputArr.value[1]](Number(a),Number(b)))
+ 
+    inputArr.value = []
 }
 
 function addSymbol(char){
-    console.log(char)
+    input.value += char
     // const keys = ['+','-','x','/']
     // if (inputArr.value.length % 2 == 0 && keys.includes(char)){
     //     input.value = "Input Invalid"
@@ -71,12 +69,7 @@ function addSymbol(char){
     //     inputArr.value.push(char)
     // }
 
-    if (initial.value){
-        inputA.value += char
-    } else{
-        inputB.value += char
-    }
-    
+
     console.log(inputArr.value)
     
 }
@@ -89,20 +82,20 @@ function clearValue(){
 
 <template>
     <div class="container">
-        <div v-if="initial" class="mainView">{{ inputA ? inputA: 0 }}</div>
+        <div v-if="initial" class="mainView">{{ input ? input: 0 }}</div>
         <div v-else class="mainView">{{ inputB ? inputB: 0 }}</div>
         <div class="buttonTop">
             <div>
-                <button class="top-row" @click="sumNum()">+</button>
+                <button class="top-row" @click="addProcess('+')">+</button>
             </div>
             <div>
-                <button class="top-row" @click="addSymbol('-')">-</button>
+                <button class="top-row" @click="addProcess('-')">-</button>
             </div>
             <div>
-                <button class="top-row" @click="addSymbol('x')">x</button>
+                <button class="top-row" @click="addProcess('x')">x</button>
             </div>
             <div>
-                <button class="top-row" @click="addSymbol('/')">/</button>
+                <button class="top-row" @click="addProcess('/')">/</button>
             </div>
         </div>
         <div class="buttonBottom">
